@@ -1,0 +1,208 @@
+Object Oriented Programming Course
+Homework - VideosDB
+KULLMAN ROBERT - ALEXANDRU, 323CA
+November 2021
+
+# Info
+https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/tema
+
+# About the code
+
+We provide the input tests, the logic that parses them and the checker that runs them.
+
+* test_db - contains the tests in JSON format
+* src
+   * checker - the checker's sources including the checkstyle necessary files, not to be modified
+   * fileio - classes for parsing the input files, not to be modified
+   * common, utils
+        * contain utility classes with constants and static methods
+        * you can add your own functionality in the existing classes or add new classes as well
+   * actor
+        * contains an enum for the types of awards an actor can have - do not modify it
+        * you can add here your actor related classes
+   * entertainment
+        * contains an enum for the supported video genres - do not modify it
+        * class for representing a Season of a tv show - do not modify it
+        * you can add here your entertainment related classes
+
+We encourage you to organize your implementation in packages based on the functionality their classes offer. Try to keep
+your code modular, readable and documented.
+
+# Testing
+
+The Main class runs the checker on your implementation. Add the entry point to your implementation in it.
+
+Run Main to test your implementation from the IDE or from command line.
+
+Run the main method from Test class with the name of the input file from the command line and the result will be written
+to the out.txt file. Thus, you can compare this result with ref.
+
+Classes:
+	* Database
+		* it stores the input based on its type in five different lists
+		* the main method is **executeActions**, which go through the list of
+		  actions and execute each one. The result is put in a JSONObject and
+		  added into the JSON Array (it contains all results).
+		* 3 methods to search a user, a movie or a serial by name in the
+		  database. Each one returns that object or null if it hasn't
+		  been found.
+	* Action
+		* the main class which will be inherited by Command, Query
+		  and Recommendation.
+		* the main method is **run** which will be implemented by subclasses.
+   * Command
+   	* **run** method calls another function based on the type of the command.
+   	* **favorite function**: 
+   		* search the user, the video in the database.
+   		* addit into the user favorite list if it has been viewed and it is 
+   		  not already in the list.
+   	* **view function**: 
+   		* search for the user and the video in the database.
+   		* increase the count in the user history map if the video has already.
+   	      been viewed or add it otherwise.
+      * **rating function**: 
+      	* search for the user.
+      	* check if the video is a movie or a serial.
+      	* if it is a movie
+	      	* add it into the user ratings list.
+	      	* add therating into the movie ratings list.
+      	* if it is a serial
+      		* add it into the user ratings list
+      		* add the rating in the corresponding season rating list
+      		* update ratings for the serial (recalculate)
+
+   * Query
+   	* **run** method calls another function based on the object type
+   	* **actors**, **shows**, **user** methods calls another functions
+   	  based on the criteria
+      * 3 methods to compare 2 actors, shows or users based on a compare
+        result (depending on the attribute we want to compare). If the
+        2 entities have the same first attribute, then the name is compared.
+        The function considers ascending or descending sorting
+      * actorsAverage:
+      	* update shows average for each actor in the database and add
+      	  all of them into a new list
+      	* sort the list by shows average
+      	* remove all actors with 0 rating
+      	* susbstract a list depending on the given bounds (number)
+      * actorsAwards:
+      	* add all the actors into a new list
+      	* remove the actors who don't have all awards
+      	* sort the list by total number of awards for each actor
+      	* susbstract a list depending on the given bounds (number)
+      * actorsFilter:
+      	* add all the actors into a new list
+      	* remove the actors who don't have all keywords in their description
+      	* sort the actors by name
+      	* susbstract a list depending on the given bounds (number)
+      * applyFilters : get the filters from the query and apply them
+         to the list given as a parameter (for shows)
+      * showsRating:
+      	* get all videos by object type (movie or serial)
+      	* remove all shows with 0 rating
+      	* sort shows by rating
+      	* substract a list depending on the given bounds (number)
+  		* showsFavorite:
+  			* get all videos by object type (movie or serial)
+  			* sort the shows by appearances in favorite lists
+  			* apply filters
+  			* remove all shows with 0 rating
+  			* substract a list depending on the given bounds (number)
+  		* showLongest
+  			* get all videos by object type (movie or serial)
+  			* sort the shows by total duration
+  			* apply filters
+  			* substract a list depending on the given bounds (number)
+  		* showMostViewed
+  			* get all videos by object type (movie or serial)
+  			* sort the shows by total views
+  			* apply filters
+  			* remove all shows with 0 rating
+  			* substract a list depending on the given bounds (number)
+  		* userNumRatings
+  			* add all users to a new list
+  			* sort the users by number of ratings given
+  			* remove all users with 0 ratings given
+  			* substract a list depending on the given bounds (number)
+
+  	* Recommendation
+  		* **run** method calls another function based on the type
+  		* compareShows: based on a compare result (depending on the attribute we want to compare). If the 2 entities have the same first attribute, then the name is compared.
+  		* standard
+  			* get the user and all videos 
+  			* get the first video in the database which has not been seen by
+  			  the user
+  		* bestUnseen
+  			* get the user and a list with unseen show
+  			* sort the unseen show list by rating
+  			* get the video with best rating from the unseen list
+  		* popular
+  			* get the user and check its subscription type
+  			* get all posible genres and sort by popularity coefficient
+  			* get the unseen show list
+  			* go through the genre list and return the first unseen movie which
+  		     has not been seen
+  		* checkSearchGenreIsValid
+  			* check if the genre given in the recommendation is valid
+  		* search
+  			* get the user and check its subscription type
+  			* get the unseen show list
+  			* remove all shows which aren't the given genre
+  			* sort the unseen list by rating
+  			* return the sorted unseen list
+  		* favorite
+  			* get the user and check its subscription type
+  			* get the unseen show list
+  			* sort the unseen list by appearances in favorite lists
+  			* remove all the shows with 0 appearances
+
+  	* Actor
+  		* calcShowsAverage
+  			* go through the list of videos from the database
+  			* check if the video is in the list given as a parameter
+  			* calculate the average rating for movies and serials
+  		* updateActorShowsAverage
+  			* update the actorShowsAverage field
+  		* hasAllAwards
+			* check if the actor has all awards in the list
+		* getTotalNoAwards
+			* get the number of awards for the actor
+		* hasAllKeywords
+			* check if the actor has all keywords given in a lsit
+
+
+	* Movie
+		* getRating
+			* get the total rating for the movie
+	* Serial
+		* calcSeasonAverageRating
+			* get the average rating for a given season
+		* updateRating
+			* update the averageRating field for the serial
+		* seasonsHaveRating
+			* check how many seasons have rating
+		* getDuration
+			* sum the duration of each season and get the total duration for
+			  the current serial
+	* Show
+		* it will be inherited by Serial and Movie class
+		* hasGivenFilter
+			* check if the show has all genres given as a parameter
+		* getFavoriteApps
+			* get the number of appearances in the users favorite lists
+		* getViews
+			* get the number of views depending on the users from the database
+		* copyVideosByObjectType, copyAllVideos, copyUnseenVideos
+			* get the videos from the database (movies or serials depending on
+			the object type given as a parameter)
+			* get all the videos from the database
+			* get all unseen videos by a user from the database
+		* getPopularityCoeff
+			* calculate the popularity coefficient as the total number of views
+			  for all shows from the genre given as a parameter
+	* User
+		* standard getters
+
+
+
+
